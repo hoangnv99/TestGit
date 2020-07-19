@@ -53,14 +53,26 @@ namespace QLNV.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "MaPB,TenPB")] PhongBan phongBan)
         {
-            if (ModelState.IsValid)
+            if (Session["HoTen"] == null || Session["HoTen"].ToString() == "")
             {
-                db.PhongBans.Add(phongBan);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("DangNhap", "QuanTris");
             }
+            else if (Session["Admin"] == null)
+            {
+                return RedirectToAction("DangNhap", "QuanTris");
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                    {
+                    db.PhongBans.Add(phongBan);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
 
-            return View(phongBan);
+                return View(phongBan);                                                                          
+            }
+           
         }
 
         // GET: PhongBans/Edit/5

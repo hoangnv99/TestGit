@@ -15,11 +15,20 @@ namespace QLNV.Controllers
         private QLNVEntities db = new QLNVEntities();
         public bool CheckUser(string username, string password)
         {
-            var kq = db.QuanTris.Where(x => x.Email == username && x.Password == password).ToList();
+            var kq1 = db.QuanTris.Where(x => x.Email == username && x.Password == password && x.Admin==true).ToList();
+            var kq2 = db.QuanTris.Where(x => x.Email == username && x.Password == password && x.Admin == false).ToList();
             //string hoTen = kq.First().HoTen;
-            if (kq.Count() > 0)
+            if (kq1.Count() > 0)
             {
-                Session["HoTen"] = kq.First().HoTen;
+                Session["HoTen"] = kq1.First().HoTen;
+                Session["Admin"] = "";
+                return true;
+            }
+            else if (kq2.Count() > 0)
+            {
+                Session["HoTen"] = kq2.First().HoTen;
+
+                Session["Admin"] = null;
                 return true;
             }
             else
